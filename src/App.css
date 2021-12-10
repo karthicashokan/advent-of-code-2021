@@ -1,10 +1,6 @@
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+  height: 100vh;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -15,13 +11,69 @@
 
 .App-header {
   background-color: #282c34;
-  min-height: 100vh;
+  height: 20%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+.App-container {
+  height: 80%;
+}
+
+.day-selector {
+  padding: 20px 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-big {
+  background-color: #282c34;
+  margin: 0 5px;
+  color: white;
+}
+
+.button-small {
+  border-radius: 0;
+  height: 20px;
+  width: 60px;
+  text-decoration: none;
+  border: none;
+  box-shadow: none;
+  margin: 0 2px;
+  background-color: pink;
+  color: white;
+}
+
+.results {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  background: white;
+  height: 100%;
+}
+
+.column {
+  background-color: lightgray;
+  flex-basis: 100%;
+  height: 90%;
+  border: 2px black dashed;
+}
+
+.column:first-child {
+  margin-left: 10px;
+  margin-right: 5px;
+}
+
+.column:last-child {
+  margin-left: 5px;
+  margin-right: 10px;
 }
 
 .App-link {
