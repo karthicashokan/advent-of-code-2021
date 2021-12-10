@@ -19,21 +19,43 @@ function App() {
               ))}
           </div>
           <div className="results">
-              <div className="column">1</div>
-              <div className="column">2</div>
+              <div className="column" id="details-section" ></div>
+              <div className="column" id="results-section" ></div>
           </div>
       </div>
     </div>
   );
 }
 
+ const pushDetail = (content) => {
+     const detailsSection = document.getElementById('details-section');
+     const detail = document.createElement('div');
+     detail.className = 'detail';
+     detail.innerHTML = content;
+     detailsSection.appendChild(detail);
+ }
+
+const pushResult = (content) => {
+    const detailsSection = document.getElementById('results-section');
+    const result = document.createElement('div');
+    result.className = 'result';
+    result.innerHTML = content;
+    detailsSection.appendChild(result);
+}
+
  const onClick = (day, part) => {
     console.log({ day, part });
      const inputFilePath = `${window.location.origin}/inputs/day${day}.txt`;
      const functionToRun = require(`./solutions/day${day}.js`)[`part${part}`];
+     const resultsSection = document.getElementById('results-section');
      fetch(inputFilePath)
          .then(response => response.text())
-         .then(data => functionToRun(data));
+         .then(data => {
+             functionToRun(data, {
+                 pushDetail,
+                 pushResult
+             });
+         });
  }
 
 export default App;
