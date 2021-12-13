@@ -144,10 +144,92 @@ module.exports = {
 
     },
 
-    part2: (input, {
+    part2: async (input, {
         pushDetail,
+        clearDetails,
         pushResult
     }) => {
-        console.log('part2');
+        let randomInputs;
+        let bingoCards = {};
+        const paragraphs = input.split('\n\n');
+        // Step 1: Initialize Matrices
+        paragraphs.map((paragraph, index) => {
+            if (index === 0) {
+                randomInputs = paragraphs[0].split(',');
+            } else {
+                const matrix_5_5 = [];
+                const rows = paragraph.split('\n');
+                rows.map((row, rowIndex) => {
+                    matrix_5_5.push(row.split(' ').filter((a) => a !== ''));
+                });
+                pushDetail(createTable(matrix_5_5));
+                pushDetail('------------------');
+                bingoCards[`${index}`] = matrix_5_5;
+            }
+        });
+        clearDetails();
+        await sleep(2000);
+
+        let BINGO = false;
+        let winningNumber = null;
+        let lastBingoCardKey = null;
+        const completedBingoCardKeys = [];
+
+
+        for (let i = 0; i < randomInputs.length; i++) {
+            const input = randomInputs[i];
+            pushResult(`Random number is: ${input}`);
+
+            if (Object.keys(bingoCards).length <= 0) {
+                break;
+            }
+
+            if (completedBingoCardKeys.length === Object.keys(bingoCards).length) {
+                break;
+            }
+
+            for (let bingoKey = 1; bingoKey < Object.keys(bingoCards).length + 1; bingoKey++) {
+                if (completedBingoCardKeys.includes(`${bingoKey}`)) {
+                    continue;
+                }
+                const bingoCard = bingoCards[`${bingoKey}`];
+                // Mark Bingo Card
+                bingoCards[bingoKey] = markBingo(bingoCard, input);
+                pushDetail(createTable(bingoCards[bingoKey]));
+                pushDetail('------------------');
+                // Check Bingo Card
+                const cardHadBingo = checkBingo(bingoCard);
+                if (cardHadBingo !== false) {
+                    completedBingoCardKeys.push(`${bingoKey}`);
+                    BINGO = cardHadBingo;
+                    winningNumber = input;
+                    lastBingoCardKey = bingoKey;
+                }
+            }
+            await sleep(200);
+            clearDetails();
+        }
+        const lastBingoCard = bingoCards[`${lastBingoCardKey}`];
+        let sumOfUnMarkedNumbers = 0;
+        lastBingoCard.forEach((row) => {
+            sumOfUnMarkedNumbers = sumOfUnMarkedNumbers + row.filter((item) => !item.includes(BINGO_CHAR))
+                .map((item) => parseInt(item))
+                .reduce((a, b) => a + b, 0);
+        })
+        const bingoArray = BINGO.map((item) => item.replace(BINGO_CHAR, '')).map((item) => parseInt(item))
+        clearDetails();
+        pushResult('------------------');
+        pushResult(`Last winning card = ${lastBingoCardKey}`);
+        pushResult('Winning Number = ' + winningNumber);
+        pushResult('------------------');
+        pushResult(bingoArray);
+        pushResult(`Sum of unmarked mumbers = ${sumOfUnMarkedNumbers}`);
+
+        pushDetail('------------------');
+        pushDetail(`Last winning card = ${lastBingoCardKey}`);
+        pushDetail(createTable(bingoCards[`${lastBingoCardKey}`]))
+        pushDetail('------------------');
+
+
     },
 };
